@@ -1,0 +1,13 @@
+rakho age = 18
+
+jodi age >= 18 thole
+    bol "Adult"
+nahole
+    bol "Child"
+
+rakho marks = 75
+
+jodi marks >= 80 thole
+    bol "A+"
+nahole
+    bol "A"

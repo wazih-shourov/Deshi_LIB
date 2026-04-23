@@ -1,0 +1,11 @@
+dhori add(x, y)
+    ferot de x + y
+
+rakho result = add(10, 5)
+bol result
+
+dhori greet(naam)
+    bol "Hello " + naam
+    bol "Ki khobor?"
+
+greet("Shakib")

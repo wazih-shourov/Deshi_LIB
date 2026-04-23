@@ -1,0 +1,7 @@
+rakho count = 1
+
+jotokhon count <= 5 thole
+    bol count
+    rakho count = count + 1
+
+bol "Loop shesh"
