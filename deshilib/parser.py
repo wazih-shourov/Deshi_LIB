@@ -8,9 +8,10 @@ class PrintNode:
         self.value = value
 
 class IfNode:
-    def __init__(self, cond, body, else_body):
+    def __init__(self, cond, body, elif_branches=None, else_body=None):
         self.cond = cond
         self.body = body
+        self.elif_branches = elif_branches or []  # (cond, body) tuples
         self.else_body = else_body
 
 class WhileNode:
@@ -71,7 +72,7 @@ def parse_binop(tokens, pos, end):
     if pos < end and tokens[pos].type == 'OPERATOR' and tokens[pos].value in ('+','-','*','/','>','<','>=','<='):
         op = tokens[pos].value
         pos += 1
-        right, pos = parse_binop(tokens, pos, end)  # right-associative নয়, কিন্তু workable
+        right, pos = parse_binop(tokens, pos, end)
         return BinOpNode(left, op, right), pos
     return left, pos
 
@@ -93,7 +94,6 @@ def parse_stmt(tokens, i, n):
         expr, next_i = parse_binop(tokens, i+2, n)
         return ReturnNode(expr), next_i
     elif t.type == 'KEYWORD' and t.value == 'dhori':
-        # dhori name(params)
         if i+1 >= n or tokens[i+1].type != 'NAME':
             return None, i+1
         func_name = tokens[i+1].value
@@ -158,11 +158,31 @@ def parse(tokens):
             cond = ' '.join(cond_parts)
             i = j+1
             body, i = parse_block(tokens, i, n)
+
+            # এলিফ ও এলস ব্রাঞ্চ পার্স
+            elif_branches = []
             else_body = []
-            if i < n and tokens[i].type == 'KEYWORD' and tokens[i].value == 'nahole':
+
+            while i < n and tokens[i].type == 'KEYWORD' and tokens[i].value == 'nahole':
                 i += 1
-                else_body, i = parse_block(tokens, i, n)
-            ast.append(IfNode(cond, body, else_body))
+                # nahole এর পরে jodi থাকলে → elif
+                if i < n and tokens[i].type == 'KEYWORD' and tokens[i].value == 'jodi':
+                    i += 1
+                    k = i
+                    cond_parts = []
+                    while k < n and not (tokens[k].type == 'KEYWORD' and tokens[k].value == 'thole'):
+                        cond_parts.append(str(tokens[k].value))
+                        k += 1
+                    elif_cond = ' '.join(cond_parts)
+                    i = k+1
+                    elif_body, i = parse_block(tokens, i, n)
+                    elif_branches.append((elif_cond, elif_body))
+                else:
+                    # শুধু nahole → else
+                    else_body, i = parse_block(tokens, i, n)
+                    break
+
+            ast.append(IfNode(cond, body, elif_branches, else_body))
         elif t.type == 'KEYWORD' and t.value == 'jotokhon':
             j = i+1
             cond_parts = []

@@ -1,0 +1,12 @@
+rakho marks = 63
+
+jodi marks >= 80 thole
+    bol "A+"
+nahole jodi marks >= 70 thole
+    bol "A"
+nahole jodi marks >= 60 thole
+    bol "A-"
+nahole
+    bol "F"
+
+bol "Done"
