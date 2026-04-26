@@ -3,10 +3,6 @@
 **deshilib** হলো একটি বাংলা প্রোগ্রামিং ভাষা যা Python এ compile হয়।  
 Write code in Bangla keywords — deshilib converts it to Python and runs it.
 
-## Author
-
-````Wazih Shourov
-
 ## Installation
 
 ```bash
